@@ -4,6 +4,7 @@ var repoContainerEl = document.querySelector('#repos-container');
 var repoSearchTerm = document.querySelector('#repo-search-term');
 
 var formSubmitHandler = function(event) {
+    //prevent page from refreshing
     event.preventDefault();
 
     //get value from input element
@@ -11,6 +12,9 @@ var formSubmitHandler = function(event) {
 
     if (username) {
         getUserRepos(username);
+
+        //clear old content
+        repoContainerEl.textContent = '';
         nameInputEl.value = '';
     } else {
         alert(`Please enter a GitHub username`);
@@ -46,14 +50,9 @@ var displayRepos = function(repos, searchTerm) {
         repoContainerEl.textContent = `No repositories found.`;
         return;
     }
-    console.log(repos);
-    console.log(searchTerm);
-    response.json().then(function(data) {
-        displayRepos(data, user);
-    });
+    
 
     //clear old content
-    repoContainerEl.textContent = '';
     repoSearchTerm.textContent = searchTerm;
 
     //loop over repos
@@ -69,6 +68,9 @@ var displayRepos = function(repos, searchTerm) {
         var titleEl = document.createElement('span');
         titleEl.textContent = repoName;
 
+         //append to container
+         repoEl.append(titleEl);
+
         //create a status element
         var statusEl = document.createElement('span');
         statusEl.classList = 'flex-row align-center';
@@ -81,10 +83,10 @@ var displayRepos = function(repos, searchTerm) {
         }
 
         //append to container
-        repoEl.appendChild(titleEl);
+        repoEl.append(statusEl);
 
         //append container to the dom
-        repoContainerEl.appendChild(repoEl);
+        repoContainerEl.append(repoEl);
     }
 };
 
