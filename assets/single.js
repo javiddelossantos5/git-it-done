@@ -1,10 +1,28 @@
-var repoNameEl = document.querySelector('#repo-name');
-var issueContainerEl = document.querySelector('#issues-container');
-var limitWarningEl = document.querySelector('#limit-warning');
+const repoNameEl = document.querySelector('#repo-name');
+const issueContainerEl = document.querySelector('#issues-container');
+const limitWarningEl = document.querySelector('#limit-warning');
+const repoNameEl = document.querySelector('#repo-name');
  
-var getRepoIssues = function(repo) {
+const getRepoName = function() {
+    //grab repo name frim url query string
+    const queryString = document.location.search;
+    //splits queryString between the = sing and calls the array at index 1
+    const repoName = queryString.split('=')[1];
+    //checks if theres a value in repoName then run this code
+    if (repoName) {
+    //update the text from repoNameEl to repoName text
+    repoNameEl.textContent = repoName;
+    //call getRepoIssues and transfer the value of repoName
+    getRepoIssues(repoName);
+    } else {
+        //if no repo was given, redirect to the homepage
+        document.location.replace('../index.html');
+    }
+};
+
+const getRepoIssues = function(repo) {
     //format to the github api url
-    var apiUrl = 'https://api.github.com/repos' + repo + '/issues/?direction=asc';
+    const apiUrl = 'https://api.github.com/repos' + repo + '/issues/?direction=asc';
 
     //make a get request to url
     fetch(apiUrl).then(function(response) {
@@ -20,20 +38,21 @@ var getRepoIssues = function(repo) {
                 }
             });
         } else {
-            alert(`There was a problem with your request!`);
+            //if not successful, redirect to the homepage
+            document.location.replace('../index.html');
         }
     });
 };
 
-var displayIssues = function(issues) {
+const displayIssues = function(issues) {
     if (issues.length === 0) {
         issueContainerEl.textContent = `This repo has no open issues!`;
         return;
     }
 
-    for (var i = 0; i < issues.length; i++) {
+    for (let i = 0; i < issues.length; i++) {
         //create a link element to take users to the issues on github
-        var issueEl = document.createElement('a');
+        const issueEl = document.createElement('a');
         issueEl.classList = 'list-item flex-row justify-space-between align-center';
         issueEl.setAttribute('href', issues[i].html_url);
         issueEl.setAttribute('target', '_blank');
@@ -42,14 +61,14 @@ var displayIssues = function(issues) {
     
 
         //create span to hold issue title
-        var titleEl = document.createElement('span');
+        const titleEl = document.createElement('span');
         titleEl.textContent = issue[i].title;
 
         //append to container
         issueEl.append(titleEl)
 
         //creat a type element
-        var typeEl = document.createElement('span');
+        const typeEl = document.createElement('span');
 
         //check if issue is an actual issue or a pull request
         if (issues[i].pull_request) {
@@ -66,11 +85,11 @@ var displayIssues = function(issues) {
     }
 };
 
-var displayWarning = function(repo) {
+const displayWarning = function(repo) {
     //add text to warning container
     limitWarningEl.textContent = 'To see more than 30 issues, visit ';  
 
-    var linkEl = document.createElement('a');
+    const linkEl = document.createElement('a');
     linkEl.textContent = `See more Issues on GitHub.com`;
     linkEl.setAttribute('href', 'https://github.com/' + repo + '/issues');
     linkEl.setAttribute('target', '_blank');
@@ -79,6 +98,5 @@ var displayWarning = function(repo) {
     limitWarningEl.addEventListener(linkEl)
 };
 
-getRepoIssues('facebook/react');
-
+getRepoName();
 
