@@ -10,10 +10,10 @@ const getRepoName = function() {
     const repoName = queryString.split('=')[1];
     //checks if theres a value in repoName then run this code
     if (repoName) {
-    //update the text from repoNameEl to repoName text
-    repoNameEl.textContent = repoName;
-    //call getRepoIssues and transfer the value of repoName
-    getRepoIssues(repoName);
+        //update the text from repoNameEl to repoName text
+        repoNameEl.textContent = repoName;
+        //call getRepoIssues and transfer the value of repoName
+        getRepoIssues(repoName);
     } else {
         //if no repo was given, redirect to the homepage
         document.location.replace('../index.html');
